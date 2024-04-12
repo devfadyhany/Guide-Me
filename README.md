@@ -11,8 +11,7 @@
 
 ### Project Workflow:
 ##### An application (C++ program) that reads from a file the country map (a graph that represents the cities and all the available transportation with their prices).
-##### The user should enter the source and destination of his trip and the amount of money he can pay,
-##### and the app should show him all the available transportation options (or a series of different transportation) that he can afford.
+##### The user should enter the source and destination of his trip and the amount of money he can pay, and the app should show him all the available transportation options (or a series of different transportation) that he can afford.
 <hr>
 
 ### Project Requirements:
@@ -44,6 +43,8 @@
 </ol>
 <hr>
 
-#### The evaluation will be mainly based on the student’s ability to use and apply the most suitable data structure(s) for the given task(s) and explain why they used them and why they are better than other data structures in any given case.
-
-#### Clean code is a must.
+### Notes:
+<ul>
+  <li>The evaluation will be mainly based on the student’s ability to use and apply the most suitable data structure(s) for the given task(s) and explain why they used them and why they are better than other data structures in any given case.</li>
+  <li>Clean code is a must.</li>
+</ul>
