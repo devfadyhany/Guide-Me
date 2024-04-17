@@ -1,11 +1,17 @@
 #pragma once
 #include <string>
-#include <vector>
+#include <list>
+#include <map>
 #include "TransportationMethod.h"
 
 using namespace std;
 
 class City {
+public:
 	string name;
-	vector<TransportationMethod> transportations;
+	list<pair<City*, TransportationMethod*>> connectedCities;
+
+	City(string name) {
+		this->name = name;
+	}
 };
