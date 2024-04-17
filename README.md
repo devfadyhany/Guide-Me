@@ -11,8 +11,7 @@
 
 ### Project Workflow:
 ##### An application (C++ program) that reads from a file the country map (a graph that represents the cities and all the available transportation with their prices).
-##### The user should enter the source and destination of his trip and the amount of money he can pay,
-##### and the app should show him all the available transportation options (or a series of different transportation) that he can afford.
+##### The user should enter the source and destination of his trip and the amount of money he can pay, and the app should show him all the available transportation options (or a series of different transportation) that he can afford.
 <hr>
 
 ### Project Requirements:
@@ -44,6 +43,17 @@
 </ol>
 <hr>
 
-#### The evaluation will be mainly based on the student’s ability to use and apply the most suitable data structure(s) for the given task(s) and explain why they used them and why they are better than other data structures in any given case.
+### Notes:
+<ul>
+  <li>The evaluation will be mainly based on the student’s ability to use and apply the most suitable data structure(s) for the given task(s) and explain why they used them and why they are better than other data structures in any given case.</li>
+  <li>Clean code is a must.</li>
+</ul>
+<hr>
 
-#### Clean code is a must.
+### Transportation Map (File Structure):
+##### 5
+##### Cairo - Giza Metro 30 Bus 60 Uber 230
+##### Dahab - Giza Bus 500 Microbus 345
+##### Cairo - BeniSeuf Microbus 20 Bus 15
+##### Asyut - Cairo Train 250 Bus 450
+##### Dahab - BeniSuef Microbus 200 Bus 315
