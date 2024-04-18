@@ -20,6 +20,10 @@ public:
 	}
 
 	void AddCity(string cityName) {
+		if (FindCity(cityName) != NULL) {
+			return;
+		}
+
 		City* newCity = new City(cityName);
 
 		adjacencyList->push_back(newCity);

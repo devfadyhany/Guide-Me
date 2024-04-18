@@ -21,11 +21,11 @@ int main() {
 
 	g->DisplayGraph();
 
-	
+	/*
 	TransportationMethod* t = src->FindTransportationMethod(dest, "Metro");
 	g->DeleteTransportationMethod(src, dest, t);
 
 	g->DisplayGraph();
-	
+	*/
 	return 0;
 }
