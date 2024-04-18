@@ -46,8 +46,40 @@ public:
 	void AddTransportationMethod(City* source, City* destination, string transportName, int price) {
 		TransportationMethod* newTransport = new TransportationMethod(transportName, price);
 
-		source->connectedCities->push_back(make_pair(destination, newTransport));
-		destination->connectedCities->push_back(make_pair(source, newTransport));
+		list<pair<City*, vector<TransportationMethod*>>>::iterator srcIt = source->connectedCities->begin();
+		list<pair<City*, vector<TransportationMethod*>>>::iterator destIt = destination->connectedCities->begin();
+
+		while (srcIt != source->connectedCities->end()) {
+			if (srcIt->first == destination) {
+				for (int i = 0; i < srcIt->second.size(); i++) {
+					if (srcIt->second[i]->name == transportName) {
+						return;
+					}
+				}
+				srcIt->second.push_back(newTransport);
+				break;
+			}
+			srcIt++;
+		}
+
+		while (destIt != destination->connectedCities->end()) {
+			if (destIt->first == source) {
+				for (int i = 0; i < destIt->second.size(); i++) {
+					if (destIt->second[i]->name == transportName) {
+						return;
+					}
+				}
+				destIt->second.push_back(newTransport);
+				return;
+			}
+			destIt++;
+		}
+
+		vector<TransportationMethod*> v;
+		v.push_back(newTransport);
+
+		source->connectedCities->push_back(make_pair(destination, v));
+		destination->connectedCities->push_back(make_pair(source, v));
 		
 	}
 
@@ -65,23 +97,39 @@ public:
 	}
 
 	void DeleteTransportationMethod(City* source, City* destination, TransportationMethod* transport) {
-		list<pair<City*, TransportationMethod*>>::iterator sourceIterator = source->connectedCities->begin();
-		list<pair<City*, TransportationMethod*>>::iterator destinationIterator = destination->connectedCities->begin();
+		list<pair<City*, vector<TransportationMethod*>>>::iterator srcIt = source->connectedCities->begin();
+		list<pair<City*, vector<TransportationMethod*>>>::iterator destIt = destination->connectedCities->begin();
 
-		while (sourceIterator != source->connectedCities->end()) {
-			if (sourceIterator->second == transport) {
-				source->connectedCities->remove(*sourceIterator);
+		while (srcIt != source->connectedCities->end()) {
+			if (srcIt->first == destination) {
+				vector<TransportationMethod*>::iterator it = srcIt->second.begin();
+
+				while (it != srcIt->second.end()) {
+					if (*it == transport) {
+						srcIt->second.erase(it);
+						break;
+					}
+					it++;
+				}
 				break;
 			}
-			sourceIterator++;
+			srcIt++;
 		}
 
-		while (destinationIterator != destination->connectedCities->end()) {
-			if (destinationIterator->second == transport) {
-				destination->connectedCities->remove(*destinationIterator);
+		while (destIt != destination->connectedCities->end()) {
+			if (destIt->first == source) {
+				vector<TransportationMethod*>::iterator it = destIt->second.begin();
+
+				while (it != destIt->second.end()) {
+					if (*it == transport) {
+						destIt->second.erase(it);
+						break;
+					}
+					it++;
+				}
 				break;
 			}
-			destinationIterator++;
+			destIt++;
 		}
 		
 		delete transport;

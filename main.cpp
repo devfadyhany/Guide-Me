@@ -21,11 +21,14 @@ int main() {
 
 	g->DisplayGraph();
 
-	/*
+	cout << "===============" << endl;
+	cout << "After Deletion:" << endl;
+	cout << "===============" << endl;
+
 	TransportationMethod* t = src->FindTransportationMethod(dest, "Metro");
 	g->DeleteTransportationMethod(src, dest, t);
 
 	g->DisplayGraph();
-	*/
+	
 	return 0;
 }
