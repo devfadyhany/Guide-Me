@@ -15,7 +15,7 @@ int main() {
 
 	g->AddTransportationMethod(src, dest, "Metro", 30);
 	dest = g->FindCity("Dahab");
-	g->AddTransportationMethod(src, dest, "Bus", 15);
+	g->AddTransportationMethod(src, dest, "Metro", 15);
 	dest = g->FindCity("Giza");
 	g->AddTransportationMethod(src, dest, "Bus", 15);
 
@@ -27,6 +27,9 @@ int main() {
 
 	TransportationMethod* t = src->FindTransportationMethod(dest, "Metro");
 	g->DeleteTransportationMethod(src, dest, t);
+
+	//t = src->FindTransportationMethod(dest, "Bus");
+	//g->DeleteTransportationMethod(src, dest, t);
 
 	g->DisplayGraph();
 	

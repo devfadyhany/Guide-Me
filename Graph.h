@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include <list>
+#include <vector>
 #include <iterator>
 #include <string>
 #include "City.h"
@@ -11,12 +11,12 @@ using namespace std;
 class Graph {
 private:
 	int size;
-	list<City*>* adjacencyList;
+	vector<City*>* adjacencyList;
 
 public:
 	Graph() {
 		size = 0;
-		adjacencyList = new list<City*>;
+		adjacencyList = new vector<City*>;
 	}
 
 	void AddCity(string cityName) {
@@ -31,7 +31,7 @@ public:
 	}
 
 	City* FindCity(string cityName) {
-		list<City*>::iterator it = adjacencyList->begin();
+		vector<City*>::iterator it = adjacencyList->begin();
 
 		while (it != adjacencyList->end()) {
 			if ((*it)->name == cityName) {
@@ -46,41 +46,26 @@ public:
 	void AddTransportationMethod(City* source, City* destination, string transportName, int price) {
 		TransportationMethod* newTransport = new TransportationMethod(transportName, price);
 
-		list<pair<City*, vector<TransportationMethod*>>>::iterator srcIt = source->connectedCities->begin();
-		list<pair<City*, vector<TransportationMethod*>>>::iterator destIt = destination->connectedCities->begin();
+		if (source->connectedCities[destination] != NULL) {
+			vector<TransportationMethod*>::iterator srcIt = source->connectedCities[destination]->begin();
 
-		while (srcIt != source->connectedCities->end()) {
-			if (srcIt->first == destination) {
-				for (int i = 0; i < srcIt->second.size(); i++) {
-					if (srcIt->second[i]->name == transportName) {
-						return;
-					}
+			while (srcIt != source->connectedCities[destination]->end()) {
+				if ((*srcIt)->name == transportName) {
+					return;
 				}
-				srcIt->second.push_back(newTransport);
-				break;
+
+				srcIt++;
 			}
-			srcIt++;
+
+			source->connectedCities[destination]->push_back(newTransport);
+			return;
 		}
 
-		while (destIt != destination->connectedCities->end()) {
-			if (destIt->first == source) {
-				for (int i = 0; i < destIt->second.size(); i++) {
-					if (destIt->second[i]->name == transportName) {
-						return;
-					}
-				}
-				destIt->second.push_back(newTransport);
-				return;
-			}
-			destIt++;
-		}
+		vector<TransportationMethod*>* v = new vector<TransportationMethod*>;
+		v->push_back(newTransport);
 
-		vector<TransportationMethod*> v;
-		v.push_back(newTransport);
-
-		source->connectedCities->push_back(make_pair(destination, v));
-		destination->connectedCities->push_back(make_pair(source, v));
-		
+		source->connectedCities[destination] = v;
+		destination->connectedCities[source] = v;
 	}
 
 	void UpdateTransportationMethod(TransportationMethod* transport, string newName, int newPrice) {
@@ -88,55 +73,29 @@ public:
 		transport->price = newPrice;
 	}
 
-	void UpdateTransportationMethod(TransportationMethod* transport, string newName) {
-		transport->name = newName;
-	}
-
-	void UpdateTransportationMethod(TransportationMethod* transport, int newPrice) {
-		transport->price = newPrice;
-	}
-
 	void DeleteTransportationMethod(City* source, City* destination, TransportationMethod* transport) {
-		list<pair<City*, vector<TransportationMethod*>>>::iterator srcIt = source->connectedCities->begin();
-		list<pair<City*, vector<TransportationMethod*>>>::iterator destIt = destination->connectedCities->begin();
+		vector<TransportationMethod*>::iterator srcIt = source->connectedCities[destination]->begin();
 
-		while (srcIt != source->connectedCities->end()) {
-			if (srcIt->first == destination) {
-				vector<TransportationMethod*>::iterator it = srcIt->second.begin();
 
-				while (it != srcIt->second.end()) {
-					if (*it == transport) {
-						srcIt->second.erase(it);
-						break;
-					}
-					it++;
-				}
+		while (srcIt != source->connectedCities[destination]->end()) {
+			if ((*srcIt) == transport) {
+				source->connectedCities[destination]->erase(srcIt);
 				break;
 			}
+
 			srcIt++;
 		}
 
-		while (destIt != destination->connectedCities->end()) {
-			if (destIt->first == source) {
-				vector<TransportationMethod*>::iterator it = destIt->second.begin();
-
-				while (it != destIt->second.end()) {
-					if (*it == transport) {
-						destIt->second.erase(it);
-						break;
-					}
-					it++;
-				}
-				break;
-			}
-			destIt++;
+		if (source->connectedCities[destination]->empty()) {
+			source->connectedCities.erase(destination);
+			destination->connectedCities.erase(source);
 		}
-		
+
 		delete transport;
 	}
 
 	void DisplayGraph() {
-		list<City*>::iterator it = adjacencyList->begin();
+		vector<City*>::iterator it = adjacencyList->begin();
 
 		while (it != adjacencyList->end()) {
 			(*it)->DisplayConnections();
