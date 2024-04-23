@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include<queue>
 #include <vector>
 #include <iterator>
 #include <string>
@@ -101,6 +102,41 @@ public:
 			(*it)->DisplayConnections();
 			cout << endl;
 			it++;
+		}
+	}
+
+	void BFS(Graph& graph, City* startCity) {
+		// Create a queue for BFS
+		queue<City*> bfsQueue;
+
+		// Mark all the cities as not visited
+		unordered_map<City*, bool> visited;
+		for (City* city : *(graph.adjacencyList)) {
+			visited[city] = false;
+		}
+
+		// Mark the current city as visited and enqueue it
+		visited[startCity] = true;
+		bfsQueue.push(startCity);
+
+		// Iterator to traverse adjacency list
+		vector<City*>::iterator it;
+
+		while (!bfsQueue.empty()) {
+			// Dequeue a city from queue and print it
+			City* currentCity = bfsQueue.front();
+			cout << currentCity->name << " ";
+			bfsQueue.pop();
+
+			// Get all adjacent cities of the dequeued city currentCity.
+			// If an adjacent has not been visited, then mark it visited
+			// and enqueue it
+			for (it = adjacencyList->begin(); it != adjacencyList->end(); ++it) {
+				if (!visited[*it]) {
+					visited[*it] = true;
+					bfsQueue.push(*it);
+				}
+			}
 		}
 	}
 
