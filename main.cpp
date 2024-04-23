@@ -6,7 +6,7 @@ using namespace std;
 int main() {
 	Graph* g = new Graph();
 
-	g->AddCity("Cairo");
+	/*g->AddCity("Cairo");
 	g->AddCity("Giza");
 	g->AddCity("Dahab");
 
@@ -30,8 +30,11 @@ int main() {
 
 	//t = src->FindTransportationMethod(dest, "Bus");
 	//g->DeleteTransportationMethod(src, dest, t);
+	*/
 
+	g->ReadGraphFromFile("Data/graph.txt");
 	g->DisplayGraph();
+	g->WriteGraphInFile("Data/newGraph.txt");
 	
 	return 0;
 }

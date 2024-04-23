@@ -3,8 +3,11 @@
 #include <vector>
 #include <iterator>
 #include <string>
+
 #include "City.h"
 #include "TransportationMethod.h"
+#include "FileHandler.h"
+#include "Utilities.h"
 
 using namespace std;
 
@@ -102,6 +105,39 @@ public:
 			cout << endl;
 			it++;
 		}
+	}
+
+	void ReadGraphFromFile(string filePath) {
+		vector<string>* strList = FileHandler::ReadFromFile(filePath);
+
+		for (int i = 1; i < strList->size(); i++) {
+			vector<string>* splitedString = Utilities::split(strList->at(i), ' ');
+
+			string sourceCity = splitedString->at(0);
+			string destinationCity = splitedString->at(2);
+
+			AddCity(sourceCity);
+			AddCity(destinationCity);
+
+			for (int i = 3; i < splitedString->size(); i = i + 2) {
+				AddTransportationMethod(FindCity(sourceCity), FindCity(destinationCity), splitedString->at(i), stoi(splitedString->at(i + 1)));
+			}
+		}
+	}
+
+	void WriteGraphInFile(string filePath) {
+		vector<string>* strList = new vector<string>;
+
+		strList->push_back(to_string(size-1));
+
+		for (int i = 0; i < adjacencyList->size(); i++) {
+			
+			for (int j = 0; j < adjacencyList->at(i)->ConnectionString().size(); j++) {
+				strList->push_back(adjacencyList->at(i)->ConnectionString()[j]);
+			}
+		}
+
+		FileHandler::WriteInFile(filePath, strList);
 	}
 
 	~Graph() {
