@@ -128,13 +128,16 @@ public:
 
 	void WriteGraphInFile(string filePath) {
 		vector<string>* strList = new vector<string>;
+		vector<pair<string, string>>* visitedList = new vector<pair<string, string>>;
 
-		strList->push_back(to_string(size - 1));
+		strList->push_back(to_string(size));
 
 		for (int i = 0; i < adjacencyList->size(); i++) {
 
-			for (int j = 0; j < adjacencyList->at(i)->ConnectionString().size(); j++) {
-				strList->push_back(adjacencyList->at(i)->ConnectionString()[j]);
+			vector<string> ConnectionString = adjacencyList->at(i)->ConnectionString(visitedList);
+
+			for (int j = 0; j < ConnectionString.size(); j++) {
+				strList->push_back(ConnectionString[j]);
 			}
 		}
 
