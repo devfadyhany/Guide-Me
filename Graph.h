@@ -141,13 +141,13 @@ public:
 		FileHandler::WriteInFile(filePath, strList);
 	}
 
-	void BFS(Graph& graph, City* startCity) {
+	void BFS(City* startCity) {
 		// Create a queue for BFS
 		queue<City*> bfsQueue;
 
 		// Mark all the cities as not visited
 		unordered_map<City*, bool> visited;
-		for (City* city : *(graph.adjacencyList)) {
+		for (City* city : (*adjacencyList)) {
 			visited[city] = false;
 		}
 
@@ -156,7 +156,7 @@ public:
 		bfsQueue.push(startCity);
 
 		// Iterator to traverse adjacency list
-		vector<City*>::iterator it;
+		//vector<City*>::iterator it;
 
 		while (!bfsQueue.empty()) {
 			// Dequeue a city from queue and print it
@@ -167,10 +167,10 @@ public:
 			// Get all adjacent cities of the dequeued city currentCity.
 			// If an adjacent has not been visited, then mark it visited
 			// and enqueue it
-			for (it = adjacencyList->begin(); it != adjacencyList->end(); ++it) {
-				if (!visited[*it]) {
-					visited[*it] = true;
-					bfsQueue.push(*it);
+			for (auto it = currentCity->connectedCities.begin(); it != currentCity->connectedCities.end(); ++it) {
+				if (!visited[it->first]) {
+					visited[it->first] = true;
+					bfsQueue.push(it->first);
 				}
 			}
 		}
