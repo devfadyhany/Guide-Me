@@ -1,14 +1,16 @@
 #include <iostream>
 #include "Graph.h"
+#include "Menu.h"
 
 using namespace std;
 
 int main() {
-	Graph* g = new Graph();
+	Graph* mainGraph = new Graph();
+	Menu menu;
 
-	g->ReadGraphFromFile("Data/graph.txt");
-	g->BFS(g->FindCity("Cairo"));
-	g->WriteGraphInFile("Data/newGraph.txt");
+	mainGraph->ReadGraphFromFile("Data/graph.txt");
+	menu.MainMenu(mainGraph);
+	mainGraph->WriteGraphInFile("Data/graph.txt");
 	
 	return 0;
 }

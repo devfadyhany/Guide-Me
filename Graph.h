@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
-#include<queue>
+#include <queue>
+#include <stack>
 #include <vector>
 #include <iterator>
 #include <string>
@@ -72,14 +73,18 @@ public:
 		destination->connectedCities[source] = v;
 	}
 
-	void UpdateTransportationMethod(TransportationMethod* transport, string newName, int newPrice) {
-		transport->name = newName;
-		transport->price = newPrice;
+	void UpdateTransportationMethod(City* source, City* destination, string transportName, string newName, int newPrice) {
+		
+		TransportationMethod* t = source->FindTransportationMethod(destination, transportName);
+		
+		if (t != NULL) {
+			t->name = newName;
+			t->price = newPrice;
+		}
 	}
 
 	void DeleteTransportationMethod(City* source, City* destination, TransportationMethod* transport) {
 		vector<TransportationMethod*>::iterator srcIt = source->connectedCities[destination]->begin();
-
 
 		while (srcIt != source->connectedCities[destination]->end()) {
 			if ((*srcIt) == transport) {
@@ -106,6 +111,76 @@ public:
 			cout << endl;
 			it++;
 		}
+	}
+
+	string BFS(City* startCity) {
+		string TraversedCities;
+		queue<City*> bfsQueue;
+
+		unordered_map<City*, bool> visited;
+		for (City* city : (*adjacencyList)) {
+			visited[city] = false;
+		}
+
+		visited[startCity] = true;
+		bfsQueue.push(startCity);
+
+		while (!bfsQueue.empty()) {
+			City* currentCity = bfsQueue.front();
+			TraversedCities.append(currentCity->name + " ");
+			bfsQueue.pop();
+
+			for (auto it = currentCity->connectedCities.begin(); it != currentCity->connectedCities.end(); ++it) {
+				if (!visited[it->first]) {
+					visited[it->first] = true;
+					bfsQueue.push(it->first);
+				}
+			}
+		}
+
+		return TraversedCities;
+	}
+
+	string DFS(City* startCity) {
+		string TraversedCities;
+		stack<City*> dfsStack;
+
+		unordered_map<City*, bool> visited;
+		for (City* city : (*adjacencyList)) {
+			visited[city] = false;
+		}
+
+		visited[startCity] = true;
+		dfsStack.push(startCity);
+
+		while (!dfsStack.empty()) {
+			City* currentCity = dfsStack.top();
+			TraversedCities.append(currentCity->name + " ");
+			dfsStack.pop();
+
+			for (auto it = currentCity->connectedCities.begin(); it != currentCity->connectedCities.end(); ++it) {
+				if (!visited[it->first]) {
+					visited[it->first] = true;
+					dfsStack.push(it->first);
+				}
+			}
+		}
+
+		return TraversedCities;
+	}
+
+	bool isComplete() {
+		for (auto it = adjacencyList->begin(); it != adjacencyList->end(); it++) {
+			if ((*it)->connectedCities.size() < size - 1) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	void ShowAvaliableRoutes(City* sourceCity, City* destinationCity, int budget) {
+		// Someone Finish This.
 	}
 
 	void ReadGraphFromFile(string filePath) {
@@ -142,41 +217,6 @@ public:
 		}
 
 		FileHandler::WriteInFile(filePath, strList);
-	}
-
-	void BFS(City* startCity) {
-		// Create a queue for BFS
-		queue<City*> bfsQueue;
-
-		// Mark all the cities as not visited
-		unordered_map<City*, bool> visited;
-		for (City* city : (*adjacencyList)) {
-			visited[city] = false;
-		}
-
-		// Mark the current city as visited and enqueue it
-		visited[startCity] = true;
-		bfsQueue.push(startCity);
-
-		// Iterator to traverse adjacency list
-		//vector<City*>::iterator it;
-
-		while (!bfsQueue.empty()) {
-			// Dequeue a city from queue and print it
-			City* currentCity = bfsQueue.front();
-			cout << currentCity->name << " ";
-			bfsQueue.pop();
-
-			// Get all adjacent cities of the dequeued city currentCity.
-			// If an adjacent has not been visited, then mark it visited
-			// and enqueue it
-			for (auto it = currentCity->connectedCities.begin(); it != currentCity->connectedCities.end(); ++it) {
-				if (!visited[it->first]) {
-					visited[it->first] = true;
-					bfsQueue.push(it->first);
-				}
-			}
-		}
 	}
 
 	~Graph() {
