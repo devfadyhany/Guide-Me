@@ -58,6 +58,7 @@ public:
 			for (TransportationMethod* t : *it->second) {
 				connection.append(t->name + " " + to_string(t->price) + " ");
 			}
+			connection.pop_back();
 			connectionList.push_back(connection);
 			connection.clear();
 			visitedList->push_back(make_pair(name, it->first->name));

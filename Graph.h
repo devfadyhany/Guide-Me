@@ -18,6 +18,44 @@ private:
 	int size;
 	vector<City*>* adjacencyList;
 
+	vector<vector<City*>>* GetRoutes(City* sourceCity, City* destinationCity, vector<vector<City*>>* ListOfRoutes, vector<City*> prev) {
+		if (ListOfRoutes == NULL) {
+			ListOfRoutes = new vector<vector<City*>>;
+		}
+
+		for (auto it = sourceCity->connectedCities.begin(); it != sourceCity->connectedCities.end(); it++) {
+			vector<City*> route;
+
+			if (!prev.empty()) {
+				route = prev;
+			}
+
+			if (route.size() != 0) {
+				if (route[route.size() - 2] == it->first) {
+					continue;
+				}
+			}
+
+			if (prev.empty()) {
+				route.push_back(sourceCity);
+			}
+			route.push_back(it->first);
+
+			if (route.back() == destinationCity) {
+				ListOfRoutes->push_back(route);
+			}
+
+			if (it->first == destinationCity) {
+				break;
+			}
+
+			ListOfRoutes = GetRoutes(it->first, destinationCity, ListOfRoutes, route);
+
+		}
+
+		return ListOfRoutes;
+	}
+
 public:
 	Graph() {
 		size = 0;
@@ -74,9 +112,9 @@ public:
 	}
 
 	void UpdateTransportationMethod(City* source, City* destination, string transportName, string newName, int newPrice) {
-		
+
 		TransportationMethod* t = source->FindTransportationMethod(destination, transportName);
-		
+
 		if (t != NULL) {
 			t->name = newName;
 			t->price = newPrice;
@@ -180,7 +218,34 @@ public:
 	}
 
 	void ShowAvaliableRoutes(City* sourceCity, City* destinationCity, int budget) {
-		// Someone Finish This.
+		
+		vector<City*> prev;
+		vector<vector<City*>>* Routes = GetRoutes(sourceCity, destinationCity, NULL, prev);
+
+		for (int i = 0; i < Routes->size(); i++) {
+			vector<City*> Route = Routes->at(i);
+			cout << "Route #" << i + 1 << ": ";
+
+			for (int j = 0; j < Route.size(); j++) {
+				cout << Route[j]->name;
+
+				// Check if there's transportation information and print options
+				if (j < Route.size() - 1) {
+					if (!Route[j]->connectedCities.empty()) { // Multiple options
+						cout << " (";
+						for (int k = 0; k < Route[j]->connectedCities[Route[j + 1]]->size(); k++) {
+							cout << Route[j]->connectedCities[Route[j + 1]]->at(k)->name;
+							if (k < Route[j]->connectedCities[Route[j + 1]]->size() - 1) {
+								cout << ", ";
+							}
+						}
+						cout << ") ";
+					}
+				}
+			}
+			cout << endl;
+		}
+
 	}
 
 	void ReadGraphFromFile(string filePath) {
