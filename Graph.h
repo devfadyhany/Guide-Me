@@ -5,6 +5,7 @@
 #include <vector>
 #include <iterator>
 #include <string>
+#include <sstream>
 
 #include "City.h"
 #include "TransportationMethod.h"
@@ -17,44 +18,6 @@ class Graph {
 private:
 	int size;
 	vector<City*>* adjacencyList;
-
-	vector<vector<City*>>* GetRoutes(City* sourceCity, City* destinationCity, vector<vector<City*>>* ListOfRoutes, vector<City*> prev) {
-		if (ListOfRoutes == NULL) {
-			ListOfRoutes = new vector<vector<City*>>;
-		}
-
-		for (auto it = sourceCity->connectedCities.begin(); it != sourceCity->connectedCities.end(); it++) {
-			vector<City*> route;
-
-			if (!prev.empty()) {
-				route = prev;
-			}
-
-			if (route.size() != 0) {
-				if (route[route.size() - 2] == it->first) {
-					continue;
-				}
-			}
-
-			if (prev.empty()) {
-				route.push_back(sourceCity);
-			}
-			route.push_back(it->first);
-
-			if (route.back() == destinationCity) {
-				ListOfRoutes->push_back(route);
-			}
-
-			if (it->first == destinationCity) {
-				break;
-			}
-
-			ListOfRoutes = GetRoutes(it->first, destinationCity, ListOfRoutes, route);
-
-		}
-
-		return ListOfRoutes;
-	}
 
 public:
 	Graph() {
@@ -217,35 +180,58 @@ public:
 		return true;
 	}
 
-	void ShowAvaliableRoutes(City* sourceCity, City* destinationCity, int budget) {
-		
-		vector<City*> prev;
-		vector<vector<City*>>* Routes = GetRoutes(sourceCity, destinationCity, NULL, prev);
-
-		for (int i = 0; i < Routes->size(); i++) {
-			vector<City*> Route = Routes->at(i);
-			cout << "Route #" << i + 1 << ": ";
-
-			for (int j = 0; j < Route.size(); j++) {
-				cout << Route[j]->name;
-
-				// Check if there's transportation information and print options
-				if (j < Route.size() - 1) {
-					if (!Route[j]->connectedCities.empty()) { // Multiple options
-						cout << " (";
-						for (int k = 0; k < Route[j]->connectedCities[Route[j + 1]]->size(); k++) {
-							cout << Route[j]->connectedCities[Route[j + 1]]->at(k)->name;
-							if (k < Route[j]->connectedCities[Route[j + 1]]->size() - 1) {
-								cout << ", ";
-							}
-						}
-						cout << ") ";
-					}
-				}
+	vector<pair<string,int>> TraverseRoutes(City* origianlSource, City* source, City* destination, vector<pair<string, int>> traversedRoutes, string routeInitial, unordered_map<City*, bool> visited, int routePrice) {
+		if (visited.empty()) {
+			for (City* city : (*adjacencyList)) {
+				visited[city] = false;
 			}
-			cout << endl;
 		}
 
+		// Loop Through Connections Of the Source
+		auto it = source->connectedCities.begin();
+		while (it != source->connectedCities.end()) {
+			City* currentCity = it->first;
+
+			if (visited[currentCity] || currentCity == origianlSource) {
+				it++;
+				continue;
+			}
+
+			// Loop Through Transportations with the Current City
+			for (auto transport : *it->second) {
+				routePrice += transport->price;
+
+				if (currentCity == destination) {
+					traversedRoutes.push_back(make_pair(routeInitial + " " + source->name + " (" + transport->name + ") " + destination->name, routePrice) );
+					routePrice -= transport->price;
+				}
+				else {
+					routeInitial += source->name + " (" + transport->name + ") ";
+
+					visited[currentCity] = true;
+					traversedRoutes = TraverseRoutes(origianlSource, currentCity, destination, traversedRoutes, routeInitial, visited, routePrice);
+
+					int pos = routeInitial.find(source->name);
+					routeInitial = routeInitial.substr(0, pos);
+					routePrice -= transport->price;
+
+				}
+			}
+
+			it++;
+		}
+		return traversedRoutes;
+	}
+
+	void ShowAvaliableRoutes(City* sourceCity, City* destinationCity, int budget) {
+		unordered_map<City*, bool> visited;
+		vector<pair<string, int>> routes = TraverseRoutes(sourceCity, sourceCity, destinationCity, routes, "", visited, 0);
+		
+		for (auto route : routes) {
+			if (route.second <= budget) {
+				cout << route.first << " " << route.second << endl;
+			}
+		}
 	}
 
 	void ReadGraphFromFile(string filePath) {

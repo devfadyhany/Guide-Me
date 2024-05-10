@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
+#include "City.h"
 
 using namespace std;
 
 class TransportationMethod {
+
 public:
 	string name;
 	int price;
