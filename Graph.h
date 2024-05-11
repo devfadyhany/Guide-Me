@@ -287,10 +287,16 @@ public:
 			vector<string>* splitedString = Utilities::split(strList->at(i), ' ');
 
 			string sourceCity = splitedString->at(0);
-			string destinationCity = splitedString->at(2);
-
 			AddCity(sourceCity);
+
+			if (splitedString->size() < 4) {
+				continue;
+			}
+
+			string destinationCity = splitedString->at(2);
 			AddCity(destinationCity);
+
+			
 
 			for (int i = 3; i < splitedString->size(); i = i + 2) {
 				AddTransportationMethod(FindCity(sourceCity), FindCity(destinationCity), splitedString->at(i), stoi(splitedString->at(i + 1)));
