@@ -171,6 +171,10 @@ public:
 	}
 
 	bool isComplete() {
+		if (size == 0 || size == 1) {
+			return false;
+		}
+
 		for (auto it = adjacencyList->begin(); it != adjacencyList->end(); it++) {
 			if ((*it)->connectedCities.size() < size - 1) {
 				return false;
