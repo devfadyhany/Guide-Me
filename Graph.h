@@ -269,6 +269,10 @@ public:
 		routes = ClearExtraSpaces(routes, budget);
 		sortByPrice(routes);
 
+		if (routes.size() == 0){
+			cout << "Couldn't Find Any Routes For Your Budget." << endl;
+		}
+
 		int counter = 1;
 		for (auto route : routes) {
 			cout << "Route#" << counter << ": " << route.first << " " << route.second << endl;
