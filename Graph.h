@@ -223,14 +223,32 @@ public:
 		return traversedRoutes;
 	}
 
-	void ShowAvaliableRoutes(City* sourceCity, City* destinationCity, int budget) {
-		unordered_map<City*, bool> visited;
-		vector<pair<string, int>> routes = TraverseRoutes(sourceCity, sourceCity, destinationCity, routes, "", visited, 0);
+	vector<pair<string, int>> ClearExtraSpaces(vector<pair<string, int>> routes, int budget) {
+		vector<pair<string, int>> temp;
 		
 		for (auto route : routes) {
 			if (route.second <= budget) {
-				cout << route.first << " " << route.second << endl;
+				string routeString;
+				vector<string>* wordsOfRoutes = Utilities::split(route.first, ' ');
+				for (auto word : *wordsOfRoutes) {
+					if (word != "") {
+						routeString += word + " ";
+					}
+				}
+				temp.push_back(make_pair(routeString, route.second));
 			}
+		}
+
+		return temp;
+	}
+
+	void ShowAvaliableRoutes(City* sourceCity, City* destinationCity, int budget) {
+		unordered_map<City*, bool> visited;
+		vector<pair<string, int>> routes = TraverseRoutes(sourceCity, sourceCity, destinationCity, routes, "", visited, 0);
+		routes = ClearExtraSpaces(routes, budget);
+
+		for (auto route : routes) {
+			cout << route.first << " " << route.second << endl;
 		}
 	}
 
