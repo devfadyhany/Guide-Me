@@ -242,13 +242,33 @@ public:
 		return temp;
 	}
 
+	void swap(pair<string, int> &a, pair<string, int> &b) {
+		pair<string, int> temp;
+		temp = a;
+		a = b;
+		b = temp;
+	}
+
+	void sortByPrice(vector<pair<string, int>>& routes) {
+		for (int i = 0; i < routes.size(); i++) {
+			for (int j = i + 1; j < routes.size(); j++) {
+				if (routes[j].second > routes[i].second) {
+					swap(routes[i], routes[j]);
+				}
+			}
+		}
+	}
+
 	void ShowAvaliableRoutes(City* sourceCity, City* destinationCity, int budget) {
 		unordered_map<City*, bool> visited;
 		vector<pair<string, int>> routes = TraverseRoutes(sourceCity, sourceCity, destinationCity, routes, "", visited, 0);
 		routes = ClearExtraSpaces(routes, budget);
+		sortByPrice(routes);
 
+		int counter = 1;
 		for (auto route : routes) {
-			cout << route.first << " " << route.second << endl;
+			cout << "Route#" << counter << ": " << route.first << " " << route.second << endl;
+			counter++;
 		}
 	}
 
