@@ -252,7 +252,7 @@ public:
 	void sortByPrice(vector<pair<string, int>>& routes) {
 		for (int i = 0; i < routes.size(); i++) {
 			for (int j = i + 1; j < routes.size(); j++) {
-				if (routes[j].second > routes[i].second) {
+				if (routes[j].second < routes[i].second) {
 					swap(routes[i], routes[j]);
 				}
 			}
