@@ -23,7 +23,7 @@ public:
 		return itemList;
 	}
 
-	 static bool equalsIgnoreCase(string& str1, string& str2) {
+	 static bool equalsIgnoreCase(string& str1, string& str2) {	
 		string str1_lower = str1;
 		string str2_lower = str2;
 		transform(str1_lower.begin(), str1_lower.end(), str1_lower.begin(), ::tolower);

@@ -29,7 +29,7 @@ public:
 		this->name = name;
 	}
 
-	void DisplayConnections() {
+	/*void DisplayConnections() {
 		cout << name << "->";
 
 		unordered_map<City*, vector<TransportationMethod*>*>::iterator it = connectedCities.begin();
@@ -42,7 +42,7 @@ public:
 			cout << "->";
 			it++;
 		}
-	}
+	}*/
 
 	vector<string> ConnectionString(vector<pair<string, string>>* visitedList) {
 		vector<string> connectionList;
@@ -71,7 +71,6 @@ public:
 
 	TransportationMethod* FindTransportationMethod(City* dest, string transportName) {
 		vector<TransportationMethod*>::iterator it = connectedCities[dest]->begin();
-
 
 		while (it != connectedCities[dest]->end()) {
 			if (Utilities::equalsIgnoreCase((*it)->name, transportName)) {

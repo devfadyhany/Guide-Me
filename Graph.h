@@ -50,6 +50,9 @@ public:
 	}
 
 	void AddTransportationMethod(City* source, City* destination, string transportName, int price) {
+
+		transform(transportName.begin(), transportName.end(), transportName.begin(), ::tolower);
+
 		TransportationMethod* newTransport = new TransportationMethod(transportName, price);
 
 		if (source->connectedCities[destination] != NULL) {
@@ -104,15 +107,15 @@ public:
 		delete transport;
 	}
 
-	void DisplayGraph() {
-		vector<City*>::iterator it = adjacencyList->begin();
+	//void DisplayGraph() {
+	//	vector<City*>::iterator it = adjacencyList->begin();
 
-		while (it != adjacencyList->end()) {
-			(*it)->DisplayConnections();
-			cout << endl;
-			it++;
-		}
-	}
+	//	while (it != adjacencyList->end()) {
+	//		//(*it)->DisplayConnections();
+	//		cout << endl;
+	//		it++;
+	//	}
+	//}
 
 	string BFS(City* startCity) {
 		string TraversedCities;
