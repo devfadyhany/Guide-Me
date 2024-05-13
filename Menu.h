@@ -115,6 +115,8 @@ public:
 			default:
 				cout << "Invalid Choice!" << endl;
 				system("pause");
+				cin.clear();
+				cin.ignore(256, '\n');
 				break;
 			}
 		} while (choice != -1);
@@ -171,6 +173,8 @@ public:
 			default:
 				cout << "Invalid Choice!" << endl;
 				system("pause");
+				cin.clear();
+				cin.ignore(256, '\n');
 				break;
 			}
 		} while (choice != -1);
@@ -208,6 +212,8 @@ public:
 			default:
 				cout << "Invalid Choice!" << endl;
 				system("pause");
+				cin.clear();
+				cin.ignore(256, '\n');
 				break;
 			}
 		} while (choice != -1);
@@ -223,19 +229,42 @@ public:
 		cout << "Enter Transportation Method Name: ";
 		cin >> transportationName;
 
-		cout << "Enter Transportation Method Price: ";
-		cin >> transportationPrice;
+		bool PriceError = false;
+
+		do {
+			system("CLS");
+			cout << "Transportation Method Name: " << transportationName << endl;
+
+
+			cout << "Enter Transportation Method Price: ";
+			cin >> transportationPrice;
+
+			if (cin.fail()) {
+				cout << "Please, Enter Numbers Only For Price!" << endl;
+				system("Pause");
+				cin.clear();
+				cin.ignore(256, '\n');
+				system("CLS");
+
+				PriceError = true;
+			}
+			else {
+				PriceError = false;
+			}
+
+		} while (PriceError);
 
 		g->AddTransportationMethod(sourceCity, destinationCity, transportationName, transportationPrice);
 
 		system("CLS");
-		cout << "Transportation Method Has Been Added Successfully!";
+		cout << "Transportation Method Has Been Added Successfully!" << endl;
 		system("pause");
 	}
 
 	void UpdateTransportationMenu(Graph* g) {
 		int newPrice;
 		string newName;
+		bool PriceError = false;
 
 		City* sourceCity = SourceCityChecker(g);
 		City* destinationCity = DestinationCityChecker(g, sourceCity->name);
@@ -258,20 +287,36 @@ public:
 				cout << "Enter The New Name: ";
 				cin >> newName;
 
-				g->UpdateTransportationMethod(sourceCity,destinationCity,transportation->name,newName,transportation->price);
+				g->UpdateTransportationMethod(sourceCity, destinationCity, transportation->name, newName, transportation->price);
 
 				system("CLS");
-				cout << "Transportation Method Name Has Been Edited Successfully!";
+				cout << "Transportation Method Name Has Been Edited Successfully!" << endl;
 				system("pause");
 				break;
 			case 2:
-				cout << "Enter The New Price: ";
-				cin >> newPrice;
+				do {
+					cout << "Enter The New Price: ";
+					cin >> newPrice;
+
+					if (cin.fail()) {
+						cout << "Please, Enter Numbers Only For Price!" << endl;
+						system("Pause");
+						cin.clear();
+						cin.ignore(256, '\n');
+						system("CLS");
+						
+						PriceError = true;
+					}
+					else {
+						PriceError = false;
+					}
+
+				} while (PriceError);
 
 				g->UpdateTransportationMethod(sourceCity, destinationCity, transportation->name, transportation->name, newPrice);
 
 				system("CLS");
-				cout << "Transportation Method Price Has Been Edited Successfully!";
+				cout << "Transportation Method Price Has Been Edited Successfully!" << endl;
 				system("pause");
 				break;
 			case 3:
@@ -280,6 +325,8 @@ public:
 			default:
 				cout << "Invalid Choice!" << endl;
 				system("pause");
+				cin.clear();
+				cin.ignore(256, '\n');
 				break;
 			}
 		} while (choice != -1);
@@ -316,8 +363,30 @@ public:
 		City* sourceCity = SourceCityChecker(g);
 		City* destinationCity = DestinationCityChecker(g, sourceCity->name);
 
-		cout << "Enter Your Budget: ";
-		cin >> budget;
+		bool BudgetError = false;
+
+		do {
+			system("CLS");
+			cout << "Source City: " << sourceCity->name << endl;
+			cout << "Destination City: " << destinationCity->name << endl;
+
+			cout << "Enter Your Budget: ";
+			cin >> budget;
+
+			if (cin.fail()) {
+				cout << "Please, Enter Numbers Only For Budget!" << endl;
+				system("Pause");
+				cin.clear();
+				cin.ignore(256, '\n');
+				system("CLS");
+
+				BudgetError = true;
+			}
+			else {
+				BudgetError = false;
+			}
+
+		} while (BudgetError);
 
 		g->ShowAvaliableRoutes(sourceCity, destinationCity, budget);
 
