@@ -3,6 +3,8 @@
 #include "Graph.h"
 #include "City.h"
 #include "TransportationMethod.h"
+#include "Utilities.h"
+
 
 using namespace std;
 
@@ -15,7 +17,7 @@ private:
 			system("CLS");
 
 			cout << "Enter Source City Name: ";
-			cin >> sourceCity;
+			cin >>  sourceCity;
 
 			if (g->FindCity(sourceCity) == NULL) {
 				cout << "City Not Found, Try Again!\n";

@@ -5,6 +5,7 @@
 #include <list>
 #include <unordered_map>
 #include "TransportationMethod.h"
+#include "Utilities.h"
 
 using namespace std;
 
@@ -73,7 +74,7 @@ public:
 
 
 		while (it != connectedCities[dest]->end()) {
-			if ((*it)->name == transportName) {
+			if (Utilities::equalsIgnoreCase((*it)->name, transportName)) {
 				return (*it);
 			}
 			it++;

@@ -40,7 +40,7 @@ public:
 		vector<City*>::iterator it = adjacencyList->begin();
 
 		while (it != adjacencyList->end()) {
-			if ((*it)->name == cityName) {
+			if ( Utilities::equalsIgnoreCase((*it)->name, cityName)) {
 				return (*it);
 			}
 			it++;

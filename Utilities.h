@@ -22,4 +22,12 @@ public:
 
 		return itemList;
 	}
+
+	 static bool equalsIgnoreCase(string& str1, string& str2) {
+		string str1_lower = str1;
+		string str2_lower = str2;
+		transform(str1_lower.begin(), str1_lower.end(), str1_lower.begin(), ::tolower);
+		transform(str2_lower.begin(), str2_lower.end(), str2_lower.begin(), ::tolower);
+		return strcmp(str1_lower.c_str(), str2_lower.c_str()) == 0;
+	}
 };
