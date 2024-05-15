@@ -44,7 +44,8 @@ private:
 				cout << "City Not Found, Try Again!\n";
 				system("pause");
 			}
-			else if (destinationCity == sourceCity) {
+			
+			if (Utilities::equalsIgnoreCase(destinationCity, sourceCity)) {
 				cout << "Destination City Cannot Be The Same As Source City, Try Again!\n";
 				system("pause");
 			}

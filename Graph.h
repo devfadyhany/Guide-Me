@@ -5,7 +5,7 @@
 #include <vector>
 #include <iterator>
 #include <string>
-#include <sstream>
+#include <map>
 
 #include "City.h"
 #include "TransportationMethod.h"
@@ -40,7 +40,7 @@ public:
 		vector<City*>::iterator it = adjacencyList->begin();
 
 		while (it != adjacencyList->end()) {
-			if ( Utilities::equalsIgnoreCase((*it)->name, cityName)) {
+			if (Utilities::equalsIgnoreCase((*it)->name, cityName)) {
 				return (*it);
 			}
 			it++;
@@ -107,15 +107,15 @@ public:
 		delete transport;
 	}
 
-	//void DisplayGraph() {
-	//	vector<City*>::iterator it = adjacencyList->begin();
+	/*void DisplayGraph() {
+		vector<City*>::iterator it = adjacencyList->begin();
 
-	//	while (it != adjacencyList->end()) {
-	//		//(*it)->DisplayConnections();
-	//		cout << endl;
-	//		it++;
-	//	}
-	//}
+		while (it != adjacencyList->end()) {
+			(*it)->DisplayConnections();
+			cout << endl;
+			it++;
+		}
+	}*/
 
 	string BFS(City* startCity) {
 		string TraversedCities;
@@ -187,7 +187,7 @@ public:
 		return true;
 	}
 
-	vector<pair<string,int>> TraverseRoutes(City* origianlSource, City* source, City* destination, vector<pair<string, int>> traversedRoutes, string routeInitial, unordered_map<City*, bool> visited, int routePrice) {
+	map<int, string>* TraverseRoutes(City* origianlSource, City* source, City* destination, map<int, string>* traversedRoutes, string routeInitial, unordered_map<City*, bool> visited, int routePrice, int budget) {
 		if (visited.empty()) {
 			for (City* city : (*adjacencyList)) {
 				visited[city] = false;
@@ -209,14 +209,21 @@ public:
 				routePrice += transport->price;
 
 				if (currentCity == destination) {
-					traversedRoutes.push_back(make_pair(routeInitial + " " + source->name + " (" + transport->name + ") " + destination->name, routePrice) );
+					if (routePrice <= budget) {
+						if (routeInitial == "") {
+							traversedRoutes->insert(make_pair(routePrice, source->name + " (" + transport->name + ") " + destination->name));
+						}
+						else {
+							traversedRoutes->insert(make_pair(routePrice, routeInitial + source->name + " (" + transport->name + ") " + destination->name));
+						}
+					}
 					routePrice -= transport->price;
 				}
 				else {
 					routeInitial += source->name + " (" + transport->name + ") ";
 
 					visited[currentCity] = true;
-					traversedRoutes = TraverseRoutes(origianlSource, currentCity, destination, traversedRoutes, routeInitial, visited, routePrice);
+					traversedRoutes = TraverseRoutes(origianlSource, currentCity, destination, traversedRoutes, routeInitial, visited, routePrice, budget);
 
 					int pos = routeInitial.find(source->name);
 					routeInitial = routeInitial.substr(0, pos);
@@ -230,55 +237,19 @@ public:
 		return traversedRoutes;
 	}
 
-	vector<pair<string, int>> ClearExtraSpaces(vector<pair<string, int>> routes, int budget) {
-		vector<pair<string, int>> temp;
-		
-		for (auto route : routes) {
-			if (route.second <= budget) {
-				string routeString;
-				vector<string>* wordsOfRoutes = Utilities::split(route.first, ' ');
-				for (auto word : *wordsOfRoutes) {
-					if (word != "") {
-						routeString += word + " ";
-					}
-				}
-				temp.push_back(make_pair(routeString, route.second));
-			}
-		}
-
-		return temp;
-	}
-
-	void swap(pair<string, int> &a, pair<string, int> &b) {
-		pair<string, int> temp;
-		temp = a;
-		a = b;
-		b = temp;
-	}
-
-	void sortByPrice(vector<pair<string, int>>& routes) {
-		for (int i = 0; i < routes.size(); i++) {
-			for (int j = i + 1; j < routes.size(); j++) {
-				if (routes[j].second < routes[i].second) {
-					swap(routes[i], routes[j]);
-				}
-			}
-		}
-	}
-
 	void ShowAvaliableRoutes(City* sourceCity, City* destinationCity, int budget) {
 		unordered_map<City*, bool> visited;
-		vector<pair<string, int>> routes = TraverseRoutes(sourceCity, sourceCity, destinationCity, routes, "", visited, 0);
-		routes = ClearExtraSpaces(routes, budget);
-		sortByPrice(routes);
+		map<int, string>* routes = new map<int, string>;
+		routes = TraverseRoutes(sourceCity, sourceCity, destinationCity, routes, "", visited, 0, budget);
 
-		if (routes.size() == 0){
+		if (routes->empty()){
 			cout << "Couldn't Find Any Routes For Your Budget." << endl;
+			return;
 		}
 
 		int counter = 1;
-		for (auto route : routes) {
-			cout << "Route#" << counter << ": " << route.first << " " << route.second << endl;
+		for (auto route : *routes) {
+			cout << "Route#" << counter << ": " << route.second << " " << route.first << endl;
 			counter++;
 		}
 	}
