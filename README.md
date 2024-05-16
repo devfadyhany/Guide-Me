@@ -1,6 +1,6 @@
 # Guide Me
 
-### Download Link: https://www.mediafire.com/file/f69izxkykrtozis/Guide+Me.rar/file
+### Download Link: https://www.mediafire.com/file/f69izxkykrtozis/Guide+Me.rar
 
 ### Project aims to implement the core concepts of Data Structure, Such as (Graphs, Vectors, etc...).
 <hr>
