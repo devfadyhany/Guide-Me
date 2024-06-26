@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Create Build Directory
       run: cmake -E make_directory ${{github.workspace}}/build
-    - name: Configure CMake
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
     - name: Build
-      run: cmake --build ./build --config Release
+      run: cmake --build ./build ..
+    - name: make
+      run: make
