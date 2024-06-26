@@ -1,0 +1,29 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Create Build Directory
+      run: cmake -E make_directory ${{github.workspace}}/build
+    - name: Configure Emscripten
+      shell: bash
+      # Change the directory to be emsdk instead of the project root
+      working-directory: ${{github.workspace}}/emsdk
+      run: |
+        ./emsdk install latest
+        ./emsdk activate latest
+    - name: Configure CMake
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -Wno-dev -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+
+    - name: Build
+      run: cmake --build ./build --config Release
